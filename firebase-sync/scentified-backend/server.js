@@ -18,7 +18,7 @@ const app = express();
 
 // Restrict CORS to only your frontend origin
 app.use(cors({
-  origin: "http://localhost:3000" // Change this when deploying frontend
+  origin: "https://scentified-in-frontend.onrender.com/"
 }));
 app.use(express.json());
 

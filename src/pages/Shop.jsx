@@ -6,7 +6,7 @@ const Shop = () => {
 
   useEffect(() => {
     // Fetch products from your backend
-    fetch("http://localhost:5050/api/products")
+  fetch("https://scentified-in.onrender.com//api/products") // <-- your real backend URL here
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => {
