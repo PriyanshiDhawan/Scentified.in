@@ -1,23 +1,15 @@
 // src/index.js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { BrowserRouter as Router } from 'react-router-dom';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 
-import { CartProvider } from './context/CartContext';
+const rootElement = document.getElementById("root");
+
+const root = ReactDOM.createRoot(rootElement);
 
 root.render(
-  <CartProvider>
-    <Router>
-      <App />
-    </Router>
-  </CartProvider>
-);
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <Router>
+  <React.StrictMode>
     <App />
-  </Router>
+  </React.StrictMode>
 );
