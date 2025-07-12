@@ -15,6 +15,7 @@ import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import BuildSet from './pages/BuildSet';
 import Contact from './pages/Contact';
+import Wishlist from "./pages/Wishlist";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/build" element={<BuildSet />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
       <Footer />
     </>
