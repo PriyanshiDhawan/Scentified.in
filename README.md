@@ -1,3 +1,32 @@
+# Scentified.in
+
+**Scentified.in** is a modern perfume decanting e-commerce platform built with React and Firebase, featuring Razorpay checkout, Firestore product storage, and TailwindCSS styling.
+
+## 🔥 Features
+
+- 🛍️ Add-to-cart and Razorpay checkout
+- 🔐 Firebase authentication (Login/Register)
+- 🧪 Build your own discovery set
+- 📦 Product management via Admin Panel (Firestore + Firebase Storage)
+- 💬 Contact via email & WhatsApp
+- ⚡ Fast static hosting on Render
+
+## 🧰 Tech Stack
+
+- React (Create React App)
+- Firebase Auth + Firestore + Storage
+- Razorpay Payment Gateway
+- TailwindCSS (CDN)
+- Render (for static deployment)
+
+## 🚀 Getting Started
+
+```bash
+git clone https://github.com/yourusername/scentified.git
+cd scentified
+npm install
+npm start
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

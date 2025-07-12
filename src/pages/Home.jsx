@@ -2,6 +2,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+<h1 className="text-4xl font-bold text-indigo-600">
+  Welcome to Scentified.in
+</h1>
 
 const Home = () => {
   // Temporary featured products
