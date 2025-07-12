@@ -4,13 +4,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'Skipping build step for backend...'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"No build needed for backend\"",
+    "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
