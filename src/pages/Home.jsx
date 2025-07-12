@@ -14,7 +14,6 @@ const Home = () => {
       const items = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
       setProducts(items);
     };
-
     fetchProducts();
   }, []);
 
