@@ -1,52 +1,29 @@
+// src/pages/Register.jsx
 import React, { useState } from 'react';
-import { auth } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 
 const Register = () => {
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleSignup = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, form.email, form.password);
-      toast.success('Account created successfully');
-      navigate('/');
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate('/dashboard');
     } catch (err) {
-      toast.error('Registration failed');
+      alert('Signup failed: ' + err.message);
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-12">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
-      <form onSubmit={handleRegister} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="Email"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          placeholder="Password"
-          className="w-full border p-2 rounded"
-        />
-        <button type="submit" className="bg-black text-white w-full py-2 rounded">
-          Register
-        </button>
-      </form>
+    <div className="auth-form">
+      <h2>Create an Account</h2>
+      <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+      <button onClick={handleSignup}>Register</button>
     </div>
   );
 };

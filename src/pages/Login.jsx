@@ -1,52 +1,29 @@
+// src/pages/Login.jsx
 import React, { useState } from 'react';
-import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 
 const Login = () => {
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, form.email, form.password);
-      toast.success('Logged in successfully');
-      navigate('/');
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/dashboard');
     } catch (err) {
-      toast.error('Invalid credentials');
+      alert('Login failed: ' + err.message);
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-12">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-      <form onSubmit={handleLogin} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="Email"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          placeholder="Password"
-          className="w-full border p-2 rounded"
-        />
-        <button type="submit" className="bg-black text-white w-full py-2 rounded">
-          Login
-        </button>
-      </form>
+    <div className="auth-form">
+      <h2>Login to Scentified</h2>
+      <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 };

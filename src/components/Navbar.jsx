@@ -1,21 +1,21 @@
 // src/components/Navbar.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 
-const Navbar = () => {
-  const { cart } = useCart();
-
+function Navbar() {
   return (
-    <nav className="bg-black text-white px-6 py-4 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold">Scentified</Link>
-      <div className="space-x-4">
-        <Link to="/">Home</Link>
-        <Link to="/cart">Cart ({cart.length})</Link>
-        <Link to="/admin">Admin</Link>
-      </div>
+    <nav className="navbar">
+      <h2><Link to="/">Scentified.in</Link></h2>
+      <ul>
+        <li><Link to="/shop">Shop</Link></li>
+        <li><Link to="/build">Build a Set</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/cart">Cart</Link></li>
+        <li><Link to="/login">Login</Link></li>
+      </ul>
     </nav>
   );
-};
+}
 
 export default Navbar;

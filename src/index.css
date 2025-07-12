@@ -1,13 +1,71 @@
+/* src/index.css */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Helvetica Neue', sans-serif;
+  background: #fdfdfd;
+  color: #333;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+nav.navbar {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+nav.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+nav.navbar a {
+  text-decoration: none;
+  color: #222;
+}
+
+footer {
+  padding: 20px;
+  background: #f4f4f4;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.hero {
+  padding: 60px 20px;
+  background: #eae8ff;
+  text-align: center;
+}
+
+.hero .cta {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #4c3df8;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.product-grid {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.product-card {
+  background: white;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
 }
