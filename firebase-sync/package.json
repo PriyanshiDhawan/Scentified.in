@@ -1,10 +1,10 @@
 {
-  "name": "firebase-sync",
+  "name": "scentified-backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'No build step needed for backend'",
+    "build": "echo 'Skipping build step for backend...'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
