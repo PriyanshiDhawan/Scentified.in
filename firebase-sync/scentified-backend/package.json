@@ -1,17 +1,16 @@
 {
   "name": "scentified-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "build": "echo \"Skipping build step for backend\"",
+    "test": "echo \"No test specified\" && exit 0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "firebase-admin": "^13.4.0"
+    "express": "^4.18.2",
+    "firebase-admin": "^13.4.0",
+    "googleapis": "^152.0.0"
   }
 }
