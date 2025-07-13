@@ -16,9 +16,9 @@ const db = admin.firestore();
 
 const app = express();
 
-// Restrict CORS to only your frontend origin
+// ✅ Correct CORS setup (no trailing slash)
 app.use(cors({
-  origin: "https://scentified-in-frontend.onrender.com/"
+  origin: "https://scentified-in-frontend.onrender.com"
 }));
 app.use(express.json());
 
@@ -34,7 +34,7 @@ app.get("/api/products", async (req, res) => {
     const products = snapshot.docs.map(doc => doc.data());
     res.json(products);
   } catch (err) {
-    console.error("Error fetching products:", err.message);
+    console.error("🔥 Error fetching products:", err); // Logs full error
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
