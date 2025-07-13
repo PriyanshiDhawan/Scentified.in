@@ -14,9 +14,9 @@ const Shop = () => {
         console.error("Failed to fetch products:", err);
         // 🛠️ Fallback sample products
         setProducts([
-          { id: '1', name: 'Dior Sauvage EDP', brand: 'Dior', price_5ml: 499, image: '/assets/sauvage.jpg' },
-          { id: '2', name: 'Creed Aventus', brand: 'Creed', price_5ml: 799, image: '/assets/aventus.jpg' },
-          { id: '3', name: 'Tom Ford Oud Wood', brand: 'Tom Ford', price_5ml: 899, image: '/assets/oudwood.jpg' }
+          { id: '1', name: 'Dior Sauvage EDP', brand: 'Dior', price_5ml: 499, image: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.48100.2x.avif' },
+          { id: '2', name: 'Creed Aventus', brand: 'Creed', price_5ml: 799, image: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.9828.2x.avif' },
+          { id: '3', name: 'Tom Ford Oud Wood', brand: 'Tom Ford', price_5ml: 899, image: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.1826.2x.avif' }
         ]);
       });
   }, []);
