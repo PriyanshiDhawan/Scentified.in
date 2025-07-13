@@ -55,27 +55,39 @@ app.post("/api/admin/sync-products", (req, res) => {
   res.json({ message: "Sync request accepted" });
 });
 
-// ✅ Upload products from Google Sheet
+// ✅ Upload products from Google Sheet with detailed logging
 app.post("/api/uploadProducts", async (req, res) => {
   try {
     const data = req.body;
+
     if (!Array.isArray(data)) {
+      console.error("❌ Invalid data format received:", typeof data);
       return res.status(400).json({ error: "Invalid data format" });
     }
 
+    console.log(`📦 Received ${data.length} products from Sheet`);
+    console.log("🧪 Sample product:", JSON.stringify(data[0], null, 2));
+
     const batch = db.batch();
+    let added = 0;
 
     data.forEach((item) => {
-      if (!item.ID) return; // Skip if ID is missing
+      if (!item.ID) {
+        console.warn("⚠️ Skipped item due to missing ID:", item);
+        return;
+      }
+
       const docRef = db.collection(COLLECTION_NAME).doc(item.ID.toString());
       batch.set(docRef, item, { merge: true });
+      added++;
     });
 
     await batch.commit();
-    console.log("✅ Products uploaded from Google Sheet");
-    res.status(200).json({ message: "Products uploaded successfully" });
+    console.log(`✅ Uploaded ${added} products to Firestore`);
+    res.status(200).json({ message: `Uploaded ${added} products successfully` });
+
   } catch (err) {
-    console.error("🔥 Error uploading products:", err);
+    console.error("🔥 Error uploading products:", err.stack);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
