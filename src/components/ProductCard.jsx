@@ -6,29 +6,28 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 const ProductCard = ({ product }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  // Extract Firestore fields with fallback names
   const {
-    id,
-    name,
-    price_5ml,
-    price_10ml,
-    price_30ml,
-    description,
-    image
+    ID = product.id, // Fallback for old dummy data
+    Name,
+    ["5ml"]: price_5ml,
+    ["10ml"]: price_10ml,
+    ["30ml"]: price_30ml,
+    ["Short Description"]: description,
+    image = "/assets/default.jpg"
   } = product;
-
-  const productImage = image || "/assets/default.jpg";
 
   useEffect(() => {
     const checkWishlist = async () => {
       const user = auth.currentUser;
-      if (user) {
-        const ref = doc(db, "wishlists", user.uid, "products", id);
+      if (user && ID) {
+        const ref = doc(db, "wishlists", user.uid, "products", ID);
         const snap = await getDoc(ref);
         setIsWishlisted(snap.exists());
       }
     };
     checkWishlist();
-  }, [id]);
+  }, [ID]);
 
   const toggleWishlist = async () => {
     const user = auth.currentUser;
@@ -37,7 +36,7 @@ const ProductCard = ({ product }) => {
       return;
     }
 
-    const ref = doc(db, "wishlists", user.uid, "products", id);
+    const ref = doc(db, "wishlists", user.uid, "products", ID);
     if (isWishlisted) {
       await deleteDoc(ref);
       setIsWishlisted(false);
@@ -54,8 +53,8 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition p-4 flex flex-col">
       <div className="relative">
         <img
-          src={productImage}
-          alt={name}
+          src={image}
+          alt={Name}
           className="w-full h-48 object-cover rounded-xl"
         />
         <button
@@ -66,15 +65,15 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold">{name}</h3>
+      <h3 className="mt-3 text-lg font-semibold">{Name}</h3>
       {description && (
         <p className="text-sm text-gray-600 mb-2">{description}</p>
       )}
 
-      <div className="text-sm">
-        <p><strong>5ml:</strong> ₹{price_5ml}</p>
-        <p><strong>10ml:</strong> ₹{price_10ml}</p>
-        <p><strong>30ml:</strong> ₹{price_30ml}</p>
+      <div className="text-sm space-y-1">
+        {price_5ml && <p><strong>5ml:</strong> ₹{price_5ml}</p>}
+        {price_10ml && <p><strong>10ml:</strong> ₹{price_10ml}</p>}
+        {price_30ml && <p><strong>30ml:</strong> ₹{price_30ml}</p>}
       </div>
     </div>
   );
