@@ -4,7 +4,7 @@ const cors = require("cors");
 const path = require("path");
 
 // Firebase Admin SDK Initialization
-const serviceAccount = require(path.resolve(__dirname, "firebase-key.json"));
+const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
 
 if (!admin.apps.length) {
   admin.initializeApp({
