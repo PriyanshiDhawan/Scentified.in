@@ -66,11 +66,13 @@ app.post("/api/uploadProducts", async (req, res) => {
     const batch = db.batch();
 
     data.forEach((item) => {
-      const docRef = db.collection(COLLECTION_NAME).doc(item.ID || undefined); // Use ID if available
-      batch.set(docRef, item);
+      if (!item.ID) return; // Skip if ID is missing
+      const docRef = db.collection(COLLECTION_NAME).doc(item.ID.toString());
+      batch.set(docRef, item, { merge: true });
     });
 
     await batch.commit();
+    console.log("✅ Products uploaded from Google Sheet");
     res.status(200).json({ message: "Products uploaded successfully" });
   } catch (err) {
     console.error("🔥 Error uploading products:", err);
