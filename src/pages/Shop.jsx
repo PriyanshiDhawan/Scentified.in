@@ -1,9 +1,12 @@
+// src/pages/Shop.jsx
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sortOrder, setSortOrder] = useState("");
@@ -19,35 +22,20 @@ const Shop = () => {
           price_10ml: item["10ml"],
           price_30ml: item["30ml"],
           description: item["Short Description"],
+          category: item.category || "Uncategorized",
           image: item.image || "/assets/default.jpg"
         }));
+
+        const uniqueCategories = [...new Set(formatted.map(p => p.category))];
+
         setProducts(formatted);
         setFiltered(formatted);
+        setCategories(uniqueCategories);
       })
       .catch(err => {
         console.error("Failed to fetch products:", err);
-        const fallback = [
-          {
-            id: '1',
-            name: 'Dior Sauvage EDP',
-            price_5ml: 499,
-            image: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.48100.2x.avif'
-          },
-          {
-            id: '2',
-            name: 'Creed Aventus',
-            price_5ml: 799,
-            image: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.9828.2x.avif'
-          },
-          {
-            id: '3',
-            name: 'Tom Ford Oud Wood',
-            price_5ml: 899,
-            image: 'https://fimgs.net/mdimg/perfume-thumbs/375x500.1826.2x.avif'
-          }
-        ];
-        setProducts(fallback);
-        setFiltered(fallback);
+        setProducts([]);
+        setFiltered([]);
       });
   }, []);
 
@@ -64,6 +52,10 @@ const Shop = () => {
       temp = temp.filter(p => p.price_5ml <= parseInt(maxPrice));
     }
 
+    if (selectedCategories.length > 0) {
+      temp = temp.filter(p => selectedCategories.includes(p.category));
+    }
+
     if (sortOrder === 'asc') {
       temp.sort((a, b) => a.price_5ml - b.price_5ml);
     } else if (sortOrder === 'desc') {
@@ -71,13 +63,19 @@ const Shop = () => {
     }
 
     setFiltered(temp);
-  }, [search, maxPrice, sortOrder, products]);
+  }, [search, maxPrice, sortOrder, selectedCategories, products]);
+
+  const toggleCategory = (cat) => {
+    setSelectedCategories(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  };
 
   return (
     <div className="shop p-6">
       <h1 className="text-3xl font-bold mb-4">Shop All Decants</h1>
 
-      {/* Filters */}
+      {/* 🔍 Filters */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <input
           type="text"
@@ -109,7 +107,28 @@ const Shop = () => {
         </select>
       </div>
 
-      {/* Product Grid */}
+      {/* 🏷️ Category Filters */}
+      {categories.length > 0 && (
+        <div className="mb-6">
+          <h3 className="font-semibold mb-2">Filter by Category:</h3>
+          <div className="flex flex-wrap gap-4">
+            {categories.map(cat => (
+              <label key={cat} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  value={cat}
+                  checked={selectedCategories.includes(cat)}
+                  onChange={() => toggleCategory(cat)}
+                  className="accent-indigo-600"
+                />
+                <span>{cat}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 🧴 Products */}
       <div className="product-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filtered.length > 0 ? (
           filtered.map((p) => <ProductCard key={p.id} product={p} />)
