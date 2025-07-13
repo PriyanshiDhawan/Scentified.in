@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase/firebase";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -6,9 +7,8 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 const ProductCard = ({ product }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  // Extract Firestore fields with fallback names
   const {
-    ID = product.id, // Fallback for old dummy data
+    ID = product.id,
     Name,
     ["5ml"]: price_5ml,
     ["10ml"]: price_10ml,
@@ -29,7 +29,8 @@ const ProductCard = ({ product }) => {
     checkWishlist();
   }, [ID]);
 
-  const toggleWishlist = async () => {
+  const toggleWishlist = async (e) => {
+    e.preventDefault(); // Prevent navigation when clicking heart
     const user = auth.currentUser;
     if (!user) {
       alert("Please log in to add items to your wishlist.");
@@ -50,7 +51,10 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition p-4 flex flex-col">
+    <Link
+      to={`/product/${ID}`}
+      className="block bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition p-4"
+    >
       <div className="relative">
         <img
           src={image}
@@ -75,7 +79,7 @@ const ProductCard = ({ product }) => {
         {price_10ml && <p><strong>10ml:</strong> ₹{price_10ml}</p>}
         {price_30ml && <p><strong>30ml:</strong> ₹{price_30ml}</p>}
       </div>
-    </div>
+    </Link>
   );
 };
 

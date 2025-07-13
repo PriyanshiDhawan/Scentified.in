@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../firebase/firebase";
 import ReviewForm from "../components/ReviewForm";
 import ReviewsList from "../components/ReviewsList";
@@ -21,8 +21,16 @@ const ProductDetail = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          console.log("✅ Product found:", docSnap.data());
-          setProduct({ id: docSnap.id, ...docSnap.data() });
+          const data = docSnap.data();
+          setProduct({ id, ...data });
+
+          // Check if wishlisted
+          const user = auth.currentUser;
+          if (user) {
+            const wishlistRef = doc(db, "wishlists", user.uid, "products", id);
+            const wishlistSnap = await getDoc(wishlistRef);
+            setIsWishlisted(wishlistSnap.exists());
+          }
         } else {
           console.warn("❌ Product not found in Firestore.");
           setNotFound(true);
@@ -37,13 +45,21 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  const toggleWishlist = () => {
-    if (!auth.currentUser) {
+  const toggleWishlist = async () => {
+    const user = auth.currentUser;
+    if (!user) {
       alert("Please log in to use the wishlist.");
       return;
     }
-    setIsWishlisted((prev) => !prev);
-    // Firebase wishlist logic can be added here
+
+    const ref = doc(db, "wishlists", user.uid, "products", id);
+    if (isWishlisted) {
+      await deleteDoc(ref);
+      setIsWishlisted(false);
+    } else {
+      await setDoc(ref, { ...product, timestamp: new Date() });
+      setIsWishlisted(true);
+    }
   };
 
   const handleAddToCart = () => {
@@ -53,7 +69,7 @@ const ProductDetail = () => {
       cart.push({ ...product, quantity: 1 });
       localStorage.setItem("cart", JSON.stringify(cart));
     }
-    alert("Product added to cart!");
+    alert("✅ Product added to cart!");
   };
 
   if (notFound) {
@@ -72,51 +88,60 @@ const ProductDetail = () => {
     );
   }
 
+  const {
+    Name,
+    image = "/assets/default.jpg",
+    ["5ml"]: price_5ml,
+    ["10ml"]: price_10ml,
+    ["30ml"]: price_30ml,
+    ["Short Description"]: description,
+    rating,
+    reviewCount
+  } = product;
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold mb-2">{product.name}</h2>
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-3xl font-bold">{Name}</h2>
         <button onClick={toggleWishlist} className="text-red-500">
           {isWishlisted ? <AiFillHeart size={28} /> : <AiOutlineHeart size={28} />}
         </button>
       </div>
 
-      {product.image ? (
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-64 object-cover rounded-lg mb-4"
-        />
-      ) : (
-        <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-          No image available
-        </div>
-      )}
+      <img
+        src={image}
+        alt={Name}
+        className="w-full h-64 object-cover rounded-lg mb-4"
+      />
 
-      <p className="text-gray-700 mb-2">{product.description || "No description available."}</p>
-      <p className="text-xl font-semibold text-black mb-2">₹{product.price || "N/A"}</p>
+      <p className="text-gray-700 mb-3">{description || "No description available."}</p>
 
-      {/* Ratings Summary */}
-      <div className="mb-4 flex items-center gap-2">
-        {product.rating ? (
+      <div className="text-lg font-medium text-gray-900 mb-4 space-y-1">
+        {price_5ml && <p>💧 5ml: ₹{price_5ml}</p>}
+        {price_10ml && <p>💧 10ml: ₹{price_10ml}</p>}
+        {price_30ml && <p>💧 30ml: ₹{price_30ml}</p>}
+      </div>
+
+      {/* Ratings */}
+      <div className="mb-6 flex items-center gap-2">
+        {rating ? (
           <>
-            <span className="text-yellow-500 text-lg">⭐ {product.rating.toFixed(1)}</span>
-            <span className="text-sm text-gray-600">({product.reviewCount || 0} reviews)</span>
+            <span className="text-yellow-500 text-lg">⭐ {rating.toFixed(1)}</span>
+            <span className="text-sm text-gray-600">({reviewCount || 0} reviews)</span>
           </>
         ) : (
           <span className="text-sm text-gray-500">No reviews yet</span>
         )}
       </div>
 
-      {/* Add to Cart Button */}
       <button
         onClick={handleAddToCart}
-        className="bg-black text-white px-6 py-2 rounded-xl shadow hover:bg-gray-800 mb-6"
+        className="bg-black text-white px-6 py-2 rounded-xl shadow hover:bg-gray-800 mb-8"
       >
         Add to Cart
       </button>
 
-      {/* Reviews Section */}
+      {/* Reviews */}
       <ReviewsList productId={id} />
       <ReviewForm productId={id} onReviewSubmitted={() => {}} />
     </div>
